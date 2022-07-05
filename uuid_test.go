@@ -6,10 +6,7 @@ import (
 
 func TestIntToUUID(t *testing.T) {
 	for i := 0; i < 10000000; i++ {
-		s, err := IntToUUID(i)
-		if err != nil {
-			t.Error(err)
-		}
+		s := IntToUUID(i)
 		if len(s) != 36 {
 			t.Errorf("seed %d: wrong uuid length: %d, expect 36", i, len(s))
 		}
@@ -21,6 +18,6 @@ func TestIntToUUID(t *testing.T) {
 
 func BenchmarkIntToUUID(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, _ = IntToUUID(i)
+		_ = IntToUUID(i)
 	}
 }

@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 )
 
-func IntToUUID(i int) (string, error) {
+func IntToUUID(i int) string {
 	rawUUID := [16]byte{
 		byte(i >> 0), byte(i >> 4), byte(i >> 8), byte(i >> 12),
 		byte(i >> 16), byte(i >> 20),
@@ -14,7 +14,7 @@ func IntToUUID(i int) (string, error) {
 	}
 	uuidBuffer := [36]byte{}
 	encodeHex(uuidBuffer[:], rawUUID)
-	return string(uuidBuffer[:]), nil
+	return string(uuidBuffer[:])
 }
 
 func encodeHex(dst []byte, uuid [16]byte) {
