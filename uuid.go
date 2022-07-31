@@ -2,6 +2,8 @@ package uuid
 
 import (
 	"encoding/hex"
+
+	"github.com/google/uuid"
 )
 
 func IntToUUID(i int) string {
@@ -15,6 +17,10 @@ func IntToUUID(i int) string {
 	uuidBuffer := [36]byte{}
 	encodeHex(uuidBuffer[:], rawUUID)
 	return string(uuidBuffer[:])
+}
+
+func New() string {
+	return uuid.New().String()
 }
 
 func encodeHex(dst []byte, uuid [16]byte) {
