@@ -1,26 +1,47 @@
 package uuid
 
 import (
+	"encoding/binary"
 	"encoding/hex"
-
-	"github.com/google/uuid"
+	"math/rand"
 )
 
-func IntToUUID(i int) string {
+func IntToUUID(i int64) string {
+	arr := int64toByteArray(i)
 	rawUUID := [16]byte{
-		byte(i >> 0), byte(i >> 4), byte(i >> 8), byte(i >> 12),
-		byte(i >> 16), byte(i >> 20),
-		byte(i >> 24), byte(i >> 28),
-		byte(i >> 32), byte(i >> 36), byte(i >> 40), byte(i >> 44),
-		byte(i >> 48), byte(i >> 52), byte(i >> 54), byte(i >> 58),
+		arr[7], arr[6], arr[5], arr[4],
+		arr[3], arr[2],
+		arr[1], arr[0],
+		arr[0], arr[1], arr[2], arr[3],
+		arr[4], arr[5], arr[6], arr[7],
 	}
 	uuidBuffer := [36]byte{}
 	encodeHex(uuidBuffer[:], rawUUID)
 	return string(uuidBuffer[:])
 }
 
+func UUIDToInt(strUUID string) int64 {
+	if len(strUUID) != 36 {
+		return -1
+	}
+	uuid := []byte(strUUID)
+	var intBytes [8]byte
+	hex.Decode(intBytes[0:2], uuid[21:23])
+	hex.Decode(intBytes[2:], uuid[24:])
+	return byteArrayToInt64(intBytes)
+}
+
+func int64toByteArray(i int64) (arr [8]byte) {
+	binary.BigEndian.PutUint64(arr[:], uint64(i))
+	return arr
+}
+
+func byteArrayToInt64(arr [8]byte) int64 {
+	return int64(binary.BigEndian.Uint64(arr[:]))
+}
+
 func New() string {
-	return uuid.New().String()
+	return IntToUUID(rand.Int63())
 }
 
 func encodeHex(dst []byte, uuid [16]byte) {
